@@ -5,15 +5,12 @@ import './charInfo.scss';
 import Spinner from "../spinner/spinner";
 import ErrorMessage from "../errorMessage/errorMessage";
 import Skeleton from "../skeleton/Skeleton";
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 
 const CharInfo = (props) => {
 
     const [char, setChar] = useState(null)
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(false)
-
-    const marvelService = new MarvelService();
+    const {loading, error, getCharacter, clearError} =  useMarvelService();
 
     useEffect(() => {
         updateChar()
@@ -29,24 +26,13 @@ const CharInfo = (props) => {
         if (!charId) {
             return;
         }
-        onCharLoading()
-        marvelService.getCharacter(charId)
+        clearError();
+        getCharacter(charId)
             .then(onCharLoaded)
-            .catch(onError)
     }
 
     const onCharLoaded = (char) => {
         setChar(char)
-        setLoading(false)
-    }
-
-    const onError = () => {
-        setLoading(false)
-        setError(true)
-    }
-
-    const onCharLoading = () => {
-       setLoading(true)
     }
 
 
@@ -96,6 +82,7 @@ const View = ({char}) => {
                 {comics.length > 0 ? null : 'There is no comics with this character'}
                 {
                     comics.map((item, i) => {
+                        // eslint-disable-next-line
                         if (i > 9) return;
                         return (
                             <li key={i} className="char__comics-item">
