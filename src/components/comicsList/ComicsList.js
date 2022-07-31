@@ -1,9 +1,11 @@
-import './comicsList.scss';
-import uw from '../../resources/img/UW.png';
-import useMarvelService from "../../services/MarvelService";
 import {useEffect, useRef, useState} from "react";
+import useMarvelService from "../../services/MarvelService";
+
 import ErrorMessage from "../errorMessage/errorMessage";
 import Spinner from "../spinner/spinner";
+import './comicsList.scss';
+import {Link} from "react-router-dom";
+
 
 const ComicsList = (props) => {
 
@@ -15,7 +17,7 @@ const ComicsList = (props) => {
     const {error, loading, getAllComics} = useMarvelService()
 
     useEffect(() => {
-       onRequest()
+       onRequest(offset, true)
     }, [])
 
     const onRequest = (offset, initial) => {
@@ -62,11 +64,11 @@ const ComicsList = (props) => {
                         focusOnItem(i)
                     }}
                 >
-                    <a href="#">
+                    <Link to={`/comics/${item.id}`}>
                         <img src={item.thumbnail} alt={item.name} className="comics__item-img" style={imgStyle}/>
                         <div className="comics__item-name">{item.title}</div>
                         <div className="comics__item-price">{item.price}</div>
-                    </a>
+                    </Link>
                 </li>
             )
         });
@@ -78,6 +80,7 @@ const ComicsList = (props) => {
         )
     }
 
+    console.log('Comics list!')
 
     const items = renderItems(comicsList);
 
